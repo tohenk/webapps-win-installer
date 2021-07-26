@@ -51,7 +51,7 @@ goto :end
 
 :list_app
     echo Available applications:
-    for /r %%i in (*.*) do (
+    for /r %%i in (*.conf?) do (
         if [%%~xi]==[.conf] (
             echo - %%~ni [*]
             set DEFAULT_APP=%%~ni
