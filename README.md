@@ -24,3 +24,8 @@ and issue:
 cd x:\path\to\installer
 install.cmd VC16
 ```
+
+## Additional Scripts
+
+* `services.cmd`, start or stop services defined in `services.dat`
+* `switch_app.cmd`, switch web application configuration found in `Conf\vhosts\*.conf`

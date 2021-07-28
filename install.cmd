@@ -5,9 +5,10 @@
 ::
 :: Last Modified: Jan 26, 2021
 
-title WebApps Installer
-echo WebApps Installer
-echo -----------------
+title WebApps Installer 1.0
+echo WebApps Installer 1.0
+echo (c) 2021 Toha ^<tohenk@yahoo.com^>
+echo --------------------------------
 echo.
 
 setlocal
