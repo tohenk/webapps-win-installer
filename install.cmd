@@ -161,7 +161,7 @@ goto :end
   )
   :: Stop Apache service
   call :query_service %APACHE_SERVICE%
-  if [%IS_INSTALLED%]==[0] goto :php_install
+  if [%IS_INSTALLED%]==[1] goto :php_install
   if [%IS_RUNNING%]==[1] (
     echo Stopping service %APACHE_SERVICE%
     sc stop %APACHE_SERVICE% >nul
