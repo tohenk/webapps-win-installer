@@ -1,14 +1,14 @@
 @echo off
 
 :: WebApps Installer version 1.0
-:: Copyright (c) 2021 Toha <tohenk@yahoo.com>
+:: Copyright (c) 2021-2022 Toha <tohenk@yahoo.com>
 ::
-:: Last Modified: Jan 26, 2021
+:: Last Modified: April 14, 2022
 
 title WebApps Installer 1.0
 echo WebApps Installer 1.0
-echo (c) 2021 Toha ^<tohenk@yahoo.com^>
-echo --------------------------------
+echo (c) 2021-2022 Toha ^<tohenk@yahoo.com^>
+echo -------------------------------------
 echo.
 
 setlocal
@@ -26,7 +26,7 @@ set INSTALL_PHP=1
 set INSTALL_SERVICE=0
 set INSTALL_PHP_EXTENSION=0
 set INSTALL_EXTENSIONS=xdebug mongodb
-set ENABLED_EXTENSIONS=curl fileinfo gd gd2 intl mbstring mysqli openssl pdo_firebird pdo_mysql pdo_sqlite sqlite3 xsl
+set ENABLED_EXTENSIONS=curl fileinfo gd gd2 intl mbstring mysqli openssl pdo_mysql pdo_sqlite sqlite3 xsl
 
 :: Parse options
 :parse_opts
@@ -161,7 +161,7 @@ goto :end
   )
   :: Stop Apache service
   call :query_service %APACHE_SERVICE%
-  if [%IS_INSTALLED%]==[1] goto :php_install
+  if [%IS_INSTALLED%]==[0] goto :apache_begin_install
   if [%IS_RUNNING%]==[1] (
     echo Stopping service %APACHE_SERVICE%
     sc stop %APACHE_SERVICE% >nul
@@ -169,6 +169,7 @@ goto :end
   if exist "%APACHE_BIN%" (
     "%APACHE_BIN%" -k uninstall
   )
+:apache_begin_install
   :: Find Apache installer source
   call :find_archive httpd
   if [%ARCHIVE%]==[] goto :err_no_apache_source
