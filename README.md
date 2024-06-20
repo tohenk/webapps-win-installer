@@ -22,7 +22,7 @@ and issue:
 
 ```
 cd x:\path\to\installer
-install.cmd VC16
+install.cmd VS16
 ```
 
 ## Additional Scripts
