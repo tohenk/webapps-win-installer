@@ -1,13 +1,13 @@
 @echo off
 
-:: WebApps Installer version 1.0
-:: Copyright (c) 2021-2022 Toha <tohenk@yahoo.com>
+:: WebApps Installer version 1.1
+:: Copyright (c) 2021-2024 Toha <tohenk@yahoo.com>
 ::
-:: Last Modified: April 14, 2022
+:: Last Modified: June 20, 2024
 
-title WebApps Installer 1.0
-echo WebApps Installer 1.0
-echo (c) 2021-2022 Toha ^<tohenk@yahoo.com^>
+title WebApps Installer 1.1
+echo WebApps Installer 1.1
+echo (c) 2021-2024 Toha ^<tohenk@yahoo.com^>
 echo -------------------------------------
 echo.
 
@@ -58,9 +58,9 @@ if [%1]==[--php-extension-only] (
   goto :parse_opts
 )
 
-:: Get VC runtime version to use
+:: Get VS runtime version to use
 if not [%1]==[] (
-  set VC=%1
+  set VS=%1
 ) else (
   goto :show_usage
 )
@@ -84,8 +84,8 @@ if not %errorLevel%==0 goto :err_need_admin
 
 :check_prerequisite
 :: Verify install source
-if not exist "%CD%Installer\%VC%" (
-  echo Installer source for %VC% not found, aborting
+if not exist "%CD%Installer\%VS%" (
+  echo Installer source for %VS% not found, aborting
   echo.
   goto :end
 )
@@ -177,7 +177,7 @@ goto :end
   if exist "%CD%%APACHE_DIR%" (
     ren "%CD%%APACHE_DIR%" %APACHE_DIR%~
   )
-  %ZIP% x -y %CD%Installer\%VC%\%ARCHIVE% %APACHE_DIR% >nul
+  %ZIP% x -y %CD%Installer\%VS%\%ARCHIVE% %APACHE_DIR% >nul
   call :apache_conf_server_root "%APACHE_CONF%" "%CD%%APACHE_DIR%"
   call :apache_conf_add_include "%APACHE_CONF%" %~0
   goto :do_install
@@ -223,7 +223,7 @@ goto :end
   if exist "%CD%%PHP_DIR%" (
     ren "%CD%%PHP_DIR%" %PHP_DIR%~
   )
-  %ZIP% x -y -o%CD%%PHP_DIR% %CD%Installer\%VC%\%ARCHIVE% >nul
+  %ZIP% x -y -o%CD%%PHP_DIR% %CD%Installer\%VS%\%ARCHIVE% >nul
   set PHP_VER=%ARCHIVE:~4,1%
   if exist "%CD%%PHP_DIR%~\php%PHP_VER%ts.dll" (
     if exist "%CD%%PHP_DIR%~\php.ini" (
@@ -327,7 +327,8 @@ goto :end
   call :find_archive php_%PHP_EXT%
   if not [%ARCHIVE%]==[] (
     echo Installing %PHP_EXT% extension from %ARCHIVE%
-    %ZIP% x -y -o%CD%%PHP_DIR%\ext %CD%Installer\%VC%\%ARCHIVE% php_%PHP_EXT%.dll >nul
+    %ZIP% x -y -o%CD%%PHP_DIR%\ext %CD%Installer\%VS%\%ARCHIVE% php_%PHP_EXT%.dll >nul
+    %ZIP% x -y -o%CD%%PHP_DIR% %CD%Installer\%VS%\%ARCHIVE% lib*.dll >nul
   )
   goto :php_install_ext
 
@@ -345,7 +346,7 @@ goto :end
 :find_archive
   set ARCHIVE=
   set TMP_FILE=%CD%Temp\~files.tmp
-  dir /b %CD%Installer\%VC%\%1-*.zip >%TMP_FILE%
+  dir /b %CD%Installer\%VS%\%1-*.zip >%TMP_FILE%
   if exist "%ProgramFiles(x86)%" (
     set ARCHS=x64 win64
   ) else (
@@ -389,7 +390,10 @@ goto :end
 
 :show_usage
   echo Usage:
-  echo   %~0 [options] [VC_VERSION]
+  echo   %~0 [options] [VERSION]
+  echo.
+  echo Supported VERSION:
+  echo - VS16
   echo.
   echo Options:
   echo --no-apache           Do not install Apache
