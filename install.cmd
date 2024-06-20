@@ -26,7 +26,7 @@ set INSTALL_PHP=1
 set INSTALL_SERVICE=0
 set INSTALL_PHP_EXTENSION=0
 set INSTALL_EXTENSIONS=xdebug mongodb
-set ENABLED_EXTENSIONS=curl fileinfo gd gd2 intl mbstring mysqli openssl pdo_mysql pdo_sqlite sqlite3 xsl
+set ENABLED_EXTENSIONS=curl fileinfo gd gd2 intl mbstring mysqli openssl pdo_mysql pdo_sqlite sqlite3 xsl zip
 
 :: Parse options
 :parse_opts
