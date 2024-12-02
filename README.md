@@ -10,7 +10,7 @@ folder.
 WebApps Windows Installer supports binaries downloaded from:
 * [Apache Lounge](https://www.apachelounge.com/download/)
 * [Windows PHP](https://windows.php.net/download/)
-* [PECL extension](https://windows.php.net/downloads/pecl/releases/)
+* [PECL extension](https://pecl.php.net/)
 
 It's required, prior to use the script to install
 [Microsoft Visual C++ Redistributable](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0).
@@ -22,7 +22,7 @@ and issue:
 
 ```
 cd x:\path\to\installer
-install.cmd VS16
+install.cmd VS17
 ```
 
 ## Additional Scripts
