@@ -1,13 +1,13 @@
 @echo off
 
-:: WebApps Installer version 1.1
-:: Copyright (c) 2021-2024 Toha <tohenk@yahoo.com>
+:: WebApps Installer version 1.2
+:: Copyright (c) 2021-2025 Toha <tohenk@yahoo.com>
 ::
-:: Last Modified: June 20, 2024
+:: Last Modified: March 21, 2025
 
-title WebApps Installer 1.1
-echo WebApps Installer 1.1
-echo (c) 2021-2024 Toha ^<tohenk@yahoo.com^>
+title WebApps Installer 1.2
+echo WebApps Installer 1.2
+echo (c) 2021-2025 Toha ^<tohenk@yahoo.com^>
 echo -------------------------------------
 echo.
 
@@ -25,8 +25,8 @@ set INSTALL_APACHE=1
 set INSTALL_PHP=1
 set INSTALL_SERVICE=0
 set INSTALL_PHP_EXTENSION=0
-set INSTALL_EXTENSIONS=xdebug mongodb
-set ENABLED_EXTENSIONS=curl fileinfo gd gd2 intl mbstring mysqli openssl pdo_mysql pdo_sqlite sqlite3 xsl zip
+set INSTALL_EXTENSIONS=memcache mongodb xdebug
+set ENABLED_EXTENSIONS=curl exif fileinfo gd intl mbstring mysqli openssl pdo_mysql pdo_sqlite sqlite3 xsl zip
 
 :: Parse options
 :parse_opts
@@ -160,13 +160,14 @@ goto :end
     goto :do_install
   )
   :: Stop Apache service
-  call :query_service %APACHE_SERVICE%
-  if [%IS_INSTALLED%]==[0] goto :apache_begin_install
-  if [%IS_RUNNING%]==[1] (
-    echo Stopping service %APACHE_SERVICE%
-    sc stop %APACHE_SERVICE% >nul
-  )
+  :: call :query_service %APACHE_SERVICE%
+  :: if [%IS_INSTALLED%]==[0] goto :apache_begin_install
+  :: if [%IS_RUNNING%]==[1] (
+  ::   echo Stopping service %APACHE_SERVICE%
+  ::   sc stop %APACHE_SERVICE% >nul
+  :: )
   if exist "%APACHE_BIN%" (
+    "%APACHE_BIN%" -k shutdown
     "%APACHE_BIN%" -k uninstall
   )
 :apache_begin_install
@@ -393,7 +394,7 @@ goto :end
   echo   %~0 [options] [VERSION]
   echo.
   echo Supported VERSION:
-  echo - VS16
+  echo - VS17
   echo.
   echo Options:
   echo --no-apache           Do not install Apache
