@@ -1,12 +1,12 @@
 @echo off
 
-:: WebApps Installer version 1.2
+:: WebApps Installer version 1.3
 :: Copyright (c) 2021-2025 Toha <tohenk@yahoo.com>
 ::
 :: Last Modified: March 21, 2025
 
-title WebApps Installer 1.2
-echo WebApps Installer 1.2
+title WebApps Installer 1.3
+echo WebApps Installer 1.3
 echo (c) 2021-2025 Toha ^<tohenk@yahoo.com^>
 echo -------------------------------------
 echo.
@@ -25,8 +25,6 @@ set INSTALL_APACHE=1
 set INSTALL_PHP=1
 set INSTALL_SERVICE=0
 set INSTALL_PHP_EXTENSION=0
-set INSTALL_EXTENSIONS=memcache mongodb xdebug
-set ENABLED_EXTENSIONS=curl exif fileinfo gd intl mbstring mysqli openssl pdo_mysql pdo_sqlite sqlite3 xsl zip
 
 :: Parse options
 :parse_opts
@@ -252,8 +250,9 @@ goto :end
   call :php_fix_extension_dir "%CD%%PHP_DIR%\php.ini" "%CD%%PHP_DIR%\ext"
   call :php_fix_extension_dir "%CD%%PHP_DIR%\php-cli.ini" "%CD%%PHP_DIR%\ext"
   :: Enable extensions
-  call :php_enable_extension "%CD%%PHP_DIR%\php.ini" %ENABLED_EXTENSIONS%
-  call :php_enable_extension "%CD%%PHP_DIR%\php-cli.ini" %ENABLED_EXTENSIONS%
+  call :php_install_data
+  call :php_enable_extension "%CD%%PHP_DIR%\php.ini" %EXT_ENABLED%
+  call :php_enable_extension "%CD%%PHP_DIR%\php-cli.ini" %EXT_ENABLED%
   :: Add PHP to PATH environment variable
   call :add_path "%CD%%PHP_DIR%"
   goto :do_install
@@ -317,7 +316,8 @@ goto :end
   goto :php_enable_extension_loop
 
 :php_install_extensions
-  call :php_install_ext %INSTALL_EXTENSIONS%
+  call :php_install_data
+  call :php_install_ext %EXT_EXTENSION%
   goto :do_install
 
 :php_install_ext
@@ -332,6 +332,13 @@ goto :end
     %ZIP% x -y -o%CD%%PHP_DIR% %CD%Installer\%VS%\%ARCHIVE% lib*.dll >nul
   )
   goto :php_install_ext
+
+:php_install_data
+  set INSTALLDATA=%CD%install.dat
+  for /f "eol=; tokens=1,* delims==" %%i in (%INSTALLDATA%) do (
+    set EXT_%%i=%%j
+  )
+  goto :eof
 
 :add_path
   set PATH_TO_ADD=%~1

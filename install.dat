@@ -1,0 +1,2 @@
+EXTENSION=memcache mongodb xdebug
+ENABLED=curl exif fileinfo gd intl mbstring mysqli openssl pdo_mysql pdo_sqlite sodium sqlite3 xsl zip
