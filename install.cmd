@@ -361,7 +361,7 @@ goto :end
     set ARCHS=x86 win32
   )
   for %%i in (%ARCHS%) do (
-    for /f "delims=" %%j in ('findstr %%i %TMP_FILE%') do (
+    for /f "delims=" %%j in ('findstr /I %%i %TMP_FILE%') do (
       set ARCHIVE=%%j
     )
   )
