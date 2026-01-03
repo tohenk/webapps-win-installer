@@ -20,9 +20,43 @@ It's required, prior to use the script to install
 To install or update Apache HTTPD and PHP, open an *Administrator Command Prompt*
 and issue:
 
-```
-cd x:\path\to\installer
+```cmd
+cd /d d:\path\to\installer
 install.cmd VS17
+```
+
+```
+WebApps Installer 1.4
+(c) 2021-2026 Toha <tohenk@yahoo.com>
+-------------------------------------
+
+Host is Windows 64-bit
+Current dir is D:\PROJ\Webapps\
+The 'Apache2.4' service is not started.
+Removing the 'Apache2.4' service
+The 'Apache2.4' service has been removed successfully.
+Installing Apache httpd from httpd-2.4.66-251206-Win64-VS17.zip
+PHP version available:
+1. PHP-8.4
+2. PHP-8.5
+Enter choice: 2
+Installing PHP from PHP-8.5\php-8.5.1-Win32-vs17-x64.zip
+Restoring php.ini
+Restoring php-cli.ini
+Checking PHP Apache module for version 8
+Enable PHP extensions in D:\PROJ\Webapps\PHP\php.ini
+Enable PHP extensions in D:\PROJ\Webapps\PHP\php-cli.ini
+Checking for extension install memcache
+Installing memcache extension from PHP-8.5\php_memcache-8.2-8.5-ts-vs17-x64.zip
+Checking for extension install mongodb
+Installing mongodb extension from PHP-8.5\php_mongodb-2.1.4-8.5-ts-vs17-x64.zip
+Checking for extension install xdebug
+Installing xdebug extension from PHP-8.5\php_xdebug-3.5.0-8.5-ts-vs17-x64.zip
+Installing the 'Apache2.4' service
+The 'Apache2.4' service is successfully installed.
+Testing httpd.conf....
+Errors reported here must be corrected before the service can be started.
+[SC] ChangeServiceConfig SUCCESS
 ```
 
 ## Additional Scripts

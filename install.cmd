@@ -1,17 +1,17 @@
 @echo off
 
-:: WebApps Installer version 1.3
-:: Copyright (c) 2021-2025 Toha <tohenk@yahoo.com>
+:: WebApps Installer version 1.4
+:: Copyright (c) 2021-2026 Toha <tohenk@yahoo.com>
 ::
-:: Last Modified: March 21, 2025
+:: Last Modified: January 03, 2026
 
-title WebApps Installer 1.3
-echo WebApps Installer 1.3
-echo (c) 2021-2025 Toha ^<tohenk@yahoo.com^>
+title WebApps Installer 1.4
+echo WebApps Installer 1.4
+echo (c) 2021-2026 Toha ^<tohenk@yahoo.com^>
 echo -------------------------------------
 echo.
 
-setlocal
+setlocal enabledelayedexpansion
 
 :: Change to current directory,
 :: vista run as administrator always start from SYSDIR
@@ -97,7 +97,9 @@ if exist "%ProgramFiles(x86)%\7-Zip\7z.exe" (
 if not exist %ZIP% goto :err_no_7zip
 
 :: Make temporary directory
-if not exist "%CD%Temp" mkdir "%CD%Temp"
+set TMPDIR=%CD%Temp
+if exist "%TMPDIR%" rmdir /s /q "%TMPDIR%"
+if not exist "%TMPDIR%" mkdir "%TMPDIR%"
 
 :: Variables for Apache
 set APACHE_DIR=Apache24
@@ -216,7 +218,7 @@ goto :end
     goto :do_install
   )
   :: Find PHP installer source
-  call :find_archive php
+  call :find_archive php PHP "PHP version available:"
   if [%ARCHIVE%]==[] goto :err_no_php_source
   echo Installing PHP from %ARCHIVE%
   if exist "%CD%%PHP_DIR%" (
@@ -325,7 +327,7 @@ goto :end
   set PHP_EXT=%1
   shift
   echo Checking for extension install %PHP_EXT%
-  call :find_archive php_%PHP_EXT%
+  call :find_archive php_%PHP_EXT% PHP "PHP version available:"
   if not [%ARCHIVE%]==[] (
     echo Installing %PHP_EXT% extension from %ARCHIVE%
     %ZIP% x -y -o%CD%%PHP_DIR%\ext %CD%Installer\%VS%\%ARCHIVE% php_%PHP_EXT%.dll >nul
@@ -342,7 +344,7 @@ goto :end
 
 :add_path
   set PATH_TO_ADD=%~1
-  set TMP_FILE=%CD%Temp\~path.tmp
+  set TMP_FILE=%TMPDIR%\~path.tmp
   echo %PATH%>%TMP_FILE%
   findstr /C:"%PATH_TO_ADD%" %TMP_FILE% >nul
   if errorlevel 1 (
@@ -353,8 +355,26 @@ goto :end
 
 :find_archive
   set ARCHIVE=
-  set TMP_FILE=%CD%Temp\~files.tmp
-  dir /b %CD%Installer\%VS%\%1-*.zip >%TMP_FILE%
+  set ARCHIVE_TOP=%CD%Installer\%VS%
+  set ARCHIVE_SUBDIR=
+  set TMP_FILE=%TMPDIR%\~files.tmp
+  if [%~2]==[] goto :find_archive_check
+  set ARCHIVE_CACHE_FILE=%TMPDIR%\%~2.dir
+  if exist "%ARCHIVE_CACHE_FILE%" goto :find_archive_setdir
+  call :choose_dir "%ARCHIVE_TOP%\%~2-*.*" "%~3"
+  set ARCHIVE_SUBDIR=%XDIR%
+  echo %XDIR%>"%ARCHIVE_CACHE_FILE%"
+  goto :find_archive_check
+  :find_archive_setdir
+  for /f %%i in (%ARCHIVE_CACHE_FILE%) do (
+    set ARCHIVE_SUBDIR=%%i
+  )
+  :find_archive_check
+  set ARCHIVE_DIR=%ARCHIVE_TOP%
+  if [%ARCHIVE_SUBDIR%]==[] goto :find_archive_start
+  set ARCHIVE_DIR=%ARCHIVE_TOP%\%ARCHIVE_SUBDIR%
+  :find_archive_start
+  dir /b %ARCHIVE_DIR%\%1-*.zip >%TMP_FILE%
   if exist "%ProgramFiles(x86)%" (
     set ARCHS=x64 win64
   ) else (
@@ -362,9 +382,40 @@ goto :end
   )
   for %%i in (%ARCHS%) do (
     for /f "delims=" %%j in ('findstr /I %%i %TMP_FILE%') do (
-      set ARCHIVE=%%j
+      if [%ARCHIVE_SUBDIR%]==[] (
+        set ARCHIVE=%%j
+      ) else (
+        set ARCHIVE=%ARCHIVE_SUBDIR%\%%j
+      )
     )
   )
+  goto :eof
+
+:choose_dir
+  set XDIR=
+  set DIR=%~1
+  set /a CNTR=0
+  for /d %%i in (%DIR%) do (
+    set /a CNTR+=1
+  )
+  if %CNTR% equ 0 goto :eof
+  set /a N=1
+  if %CNTR% equ 1 goto :choose_dir_check
+  echo %~2
+  set /a CNTR=0
+  for /d %%i in (%DIR%) do (
+    set /a CNTR+=1
+    echo !CNTR!. %%~nxi
+  )
+  :choose_dir_loop
+  set /p N="Enter choice: "
+  :choose_dir_check
+  set /a CNTR=0
+  for /d %%i in (%DIR%) do (
+    set /a CNTR+=1
+    if !CNTR! equ %N% set XDIR=%%~nxi
+  )
+  if [%XDIR%]==[] goto :choose_dir_loop
   goto :eof
 
 :query_service
