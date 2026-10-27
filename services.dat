@@ -1,4 +1,7 @@
 ; ServiceName=Service Label
-MySQL84=MySQL84
+;MySQL84=MySQL84
+;MySQL97=MySQL97
+;MySQL267=MySQL267
+MySQL2610=MySQL2610
 MongoDB=MongoDB
 Apache2.4=Apache2.4
